@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}modification catégorie{% endblock %}
+
+{% block body %}
+    <h1>Détails de la catégorie</h1>
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}

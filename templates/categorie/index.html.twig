@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategorieController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Liste des catégories</h1>
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ form(form) }}    
+    {% endif %}
+
+    {% for categorie in categories %}
+        <div class="card">
+            {{ categorie.titre }} 
+            <a href="{{ path('detail_categorie', {'id': categorie.id}) }}">Voir</a>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('update_categorie', {'id': categorie.id}) }}">Modifier</a> 
+                <a href="{{ path('delete_categorie', {'id': categorie.id}) }}">Supprimer</a>
+            {% endif %}
+
+            {% if categorie.articles|length > 0 %}
+                <p>Nombre d'articles : {{ categorie.articles|length }}</p>
+            
+            {% else %}
+                <p>Aucun article dans cette catégorie.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

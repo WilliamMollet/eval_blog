@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticleController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .article { border: 1px solid black; margin: 10px; padding: 10px; display: flex; justify-content: space-between; }
+</style>
+
+<div class="example-wrapper">
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ form(form) }}
+    {% endif %}
+
+    <h1>Articles</h1>
+    {% for article in articles %}
+        {% if article.etat == 1 %}
+            <div class="article">
+            <a href="{{ path('detail_article', {'id': article.id}) }}">
+                <h2>
+                    {{ article.titre }}</h2> <p>{{ article.auteur.nom }}
+                </h2>
+            </a>
+            </div>
+        {% endif %}
+        <hr/>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            {% if article.etat == 0 %}
+                <h2> Article brouillon : </h2>
+                    <div class="article">
+                        <a href="{{ path('detail_article', {'id': article.id}) }}">
+                            <h2>
+                                {{ article.titre }}</h2> <p>{{ article.auteur.nom }}
+                            </h2>
+                        </a>
+                    </div>
+                {% elseif  article.etat == 0|length < 0 %}
+                    <b> Aucun article brouillon... </b>
+                {% endif %}
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

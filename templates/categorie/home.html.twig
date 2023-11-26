@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategorieController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    {% if categories is not empty %}
+
+        <h1>Les 3 Catégories les plus récentes !</h1>
+        <ul>
+            {% for categorie in categories %}
+                <a href="{{ path('detail_categorie', {'id': categorie.id}) }}">
+                <li>{{ categorie.titre }}</li>
+                </a>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h1>Aucune catégorie n'a été trouvée.</h1>
+    {% endif %}
+</div>
+{% endblock %}

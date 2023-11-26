@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'article{% endblock %}
+
+{% block body %}
+    
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        {% if is_granted('ROLE_ADMIN') %}
+            <h1> Administration </h1>
+            <a class="btn btn-warning" href="{{ path('modifier_article', {'id': articles.id}) }}">Modifier l'article</a>
+            <a class="btn btn-danger" href="{{ path('supprimer_article', {'id': articles.id}) }}">Supprimer l'article</a>
+        {% endif %}
+        <a class="btn btn-info" href="{{ path('app_article') }}">Retour à la liste des articles</a>
+        <h1>Détails de l'article</h1>
+        <p>Date de création: {{ articles.dateCrea|date('d/m/Y') }}</p>
+        {% if articles.dateParu is not null %}
+            <p>Date de publication: {{ articles.dateParu|date('d/m/Y') }}</p>
+        {% else %}
+            <p>Date de publication: Non publié</p>
+        {% endif %}
+
+        <hr/>
+        
+        <h1>Titre: {{ articles.titre }}</h1>
+        <p>Contenu: {{ articles.contenu }}</p>
+        <p>Auteur: {{ articles.auteur.nom }}</p>
+        <p>Catégorie: {{ articles.categorie.titre }}</p>
+        <hr/>
+
+        {% if is_granted('ROLE_USER') %}
+            {{ form(commentaireForm) }}
+        {% else %}
+            <p>Vous devez être connecté pour poster un commentaire.</p>
+        {% endif %}
+        <hr/>
+
+        <h2>Commentaires :</h2>
+        {% if articles.commentaires is not empty %}
+            <ul>
+                {% for commentaire in articles.commentaires %}
+                <div  style="display: flex;">
+                    {% if not is_granted('ROLE_ADMIN') %}                        
+                        {% if commentaire.etat == 1%}
+                            <li style="margin: 20px;">{{ commentaire.commentaire }} - {{ commentaire.auteur.nom }}</li>
+                        {% endif %}
+                    {% elseif is_granted('ROLE_ADMIN') %}
+                        <li style="margin: 20px;">{{ commentaire.commentaire }} - {{ commentaire.auteur.nom }}</li>
+                        <form method="post" action="{{ path('app_commentaire_etat', {'id': commentaire.id}) }}">
+                            <button type="submit" class="btn btn-warning">
+                                {% if commentaire.etat %}
+                                    Désactiver
+                                {% else %}
+                                    Activer
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun commentaire pour cet articles.</p>
+        {% endif %}
+    </div>
+{% endblock %}

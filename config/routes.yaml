@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+detail_article:
+    path: /article-details/{id}
+    controller: App\Controller\ArticleController::details
+    requirements:
+        id: \d+
